@@ -64,7 +64,6 @@ function returnCounter(number = 0) {
         number +=1;
         
         return number;
-
     }
 
     return f;
