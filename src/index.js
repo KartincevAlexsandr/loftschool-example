@@ -62,12 +62,12 @@ function returnFnResult(fn) {
 function returnCounter(number = 0) {
     function f() {
         number +=1;
-
-        return number
+        
+        return number;
 
     }
 
-    return f
+    return f;
 }
 
 /*
@@ -86,8 +86,7 @@ function returnArgumentsArray() {
         args[i] = arguments[i];
     }
 
-    return args
-    
+    return args;
 }
 
 /*
@@ -112,9 +111,9 @@ function bindFunction(fn) {
         args[i - 1] = arguments[i];
     }
     
-    return () => fn(...args)
-
+    return () => fn(...args);
 }
+
 export {
     returnFirstArgument,
     sumWithDefaults,
