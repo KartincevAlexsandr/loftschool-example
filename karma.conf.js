@@ -27,6 +27,7 @@ module.exports = function(config) {
             flags: ['--no-sandbox']
         }
         },
+        
         captureTimeout: 20000,
         singleRun: true,
         plugins: [
