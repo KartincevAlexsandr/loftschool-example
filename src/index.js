@@ -82,7 +82,7 @@ function returnArgumentsArray() {
     let args = [];
 
     for (var i = 0; i < arguments.length; i++) {
-        args[i] = arguments[i];
+        args.push(arguments[i]);
     }
 
     return args;
@@ -107,7 +107,7 @@ function bindFunction(fn) {
     let args = [];
 
     for (var i = 1; i < arguments.length; i++) {
-        args[i - 1] = arguments[i];
+        args.push(arguments[i]);
     }
     
     return () => fn(...args);
