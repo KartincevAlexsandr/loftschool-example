@@ -20,7 +20,14 @@ module.exports = function(config) {
             fixWebpackSourcePaths: true
         },
         port: 9876,
-        browsers: ['ChromeHeadless'], // или Chrome или Firefox
+        browsers: ['ChromeHeadlessNoSandbox'], // или Chrome или Firefox
+        customLaunchers: {
+        ChromeHeadlessNoSandbox: {
+            base: 'ChromeHeadless',
+            flags: ['--no-sandbox']
+        }
+        },
+        
         captureTimeout: 20000,
         singleRun: true,
         plugins: [
