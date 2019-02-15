@@ -8,15 +8,3 @@ out/
 dist/
 node_modules/
 coverage/
-test.js
-node_modules/
-helper.js
-index.hbs
-package.json
-.babelrc
-.editorconfig
-.eslintrc
-.gitignore
-.travis.yml
-README.md
-package-lock.json
