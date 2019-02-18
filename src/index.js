@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* ДЗ 3 - работа с исключениями и отладчиком */
 
 /*
@@ -17,6 +18,25 @@
    isAllTrue([100, 2, 3, 4, 5], n => n < 10) // вернет false
  */
 function isAllTrue(array, fn) {
+
+    if (!(array instanceof Array) || (array.length < 1)) {
+        throw new Error('empty array');
+    }
+
+    if ((typeof fn != 'function')) {
+        throw new Error('fn is not a function');
+    }
+
+    let isTrues;
+
+    for (let line of array) {
+        isTrues = fn(line);
+        if (!(isTrues)) {
+            break;
+        }
+    }
+
+    return isTrues;
 }
 
 /*
@@ -36,6 +56,25 @@ function isAllTrue(array, fn) {
    isSomeTrue([1, 2, 3, 4, 5], n => n > 20) // вернет false
  */
 function isSomeTrue(array, fn) {
+    if (!(array instanceof Array) || (array.length < 1)) {
+        throw new Error('empty array');
+    }
+
+    if (!(fn instanceof Function)) {
+        throw new Error('fn is not a function');
+    }
+
+    let isTrues;
+
+    for (let line of array) {
+        isTrues = fn(line);
+        if (isTrues) {
+            break;
+        }
+    }
+
+    return isTrues;
+
 }
 
 /*
@@ -50,6 +89,21 @@ function isSomeTrue(array, fn) {
    - fn не является функцией (с текстом "fn is not a function")
  */
 function returnBadArguments(fn) {
+    if (!(fn instanceof Function)) {
+        throw new Error('fn is not a function');
+    }
+
+    let array = [];
+
+    for (let i = 1; i < arguments.length; i++) {
+        try {
+            fn(arguments[i]);
+        } catch (e) {
+            array.push(arguments[i]);
+        }
+    }
+
+    return array;
 }
 
 /*
@@ -69,7 +123,42 @@ function returnBadArguments(fn) {
    - number не является числом (с текстом "number is not a number")
    - какой-либо из аргументов div является нулем (с текстом "division by 0")
  */
-function calculator() {
+function calculator(number = 0) {
+
+    if (typeof number != 'number') {
+        throw new Error('number is not a number');
+    }
+    let reslt = {
+        sum: function () {
+            let array = [...arguments];
+
+            return array.reduce((number, current) => number + current, number);
+        },
+
+        dif: function () {
+            let array = [...arguments];
+
+            return array.reduce((number, current) => number - current, number);
+        },
+
+        div: function () {
+            let array = [...arguments];
+
+            if (array.indexOf(0) !== -1) {
+                throw new Error('division by 0');
+            }
+
+            return array.reduce((number, current) => number / current, number);
+        },
+
+        mul: function () {
+            let array = [...arguments];
+
+            return array.reduce((number, current) => number * current, number);
+        }
+    };
+
+    return reslt;
 }
 
 /* При решении задач, пострайтесь использовать отладчик */
