@@ -11,6 +11,11 @@
    createDivWithText('loftschool') // создаст элемент div, поместит в него 'loftschool' и вернет созданный элемент
  */
 function createDivWithText(text) {
+    const element = document.createElement('div');
+
+    element.innerText = text;
+
+    return element;
 }
 
 /*
@@ -22,6 +27,9 @@ function createDivWithText(text) {
    prepend(document.querySelector('#one'), document.querySelector('#two')) // добавит элемент переданный первым аргументом в начало элемента переданного вторым аргументом
  */
 function prepend(what, where) {
+    let firstChaild = where.childNodes[0];
+
+    where.insertBefore(what, firstChaild);
 }
 
 /*
@@ -43,68 +51,95 @@ function prepend(what, where) {
 
    findAllPSiblings(document.body) // функция должна вернуть массив с элементами div и span т.к. следующим соседом этих элементов является элемент с тегом P
  */
+
 function findAllPSiblings(where) {
+    let array = [];
+
+    for (let i = 1; i < where.children.length; i++) {
+        if (where.children[i].tagName === 'P') {
+            array.push(where.children[i - 1]);
+        }
+    }
+
+    return array;
 }
 
 /*
  Задание 4:
-
+ 
  Функция представленная ниже, перебирает все дочерние узлы типа "элемент" внутри узла переданного в параметре where и возвращает массив из текстового содержимого найденных элементов
  Но похоже, что в код функции закралась ошибка и она работает не так, как описано.
-
+ 
  Необходимо найти и исправить ошибку в коде так, чтобы функция работала так, как описано выше.
-
+ 
  Пример:
    Представим, что есть разметка:
    <body>
       <div>привет</div>
       <div>loftschool</div>
    </dody>
-
+ 
    findError(document.body) // функция должна вернуть массив с элементами 'привет' и 'loftschool'
  */
 function findError(where) {
-    var result = [];
+    let array = [];
 
-    for (var child of where.childNodes) {
-        result.push(child.innerText);
+    for (let i = 0; i < where.children.length; i++) {
+        let text = where.children[i].innerText;
+
+        array.push(text);
     }
 
-    return result;
+    return array
 }
 
 /*
  Задание 5:
-
+ 
  Функция должна перебрать все дочерние узлы элемента переданного в параметре where и удалить из него все текстовые узлы
-
+ 
  Задачу необходимо решить без использования рекурсии, то есть можно не уходить вглубь дерева.
  Так же будьте внимательны при удалении узлов, т.к. можно получить неожиданное поведение при переборе узлов
-
+ 
  Пример:
    После выполнения функции, дерево <div></div>привет<p></p>loftchool!!!
    должно быть преобразовано в <div></div><p></p>
  */
 function deleteTextNodes(where) {
+    for (let i = 0; i < where.childNodes.length; i++) {
+        if (where.childNodes[i].nodeType === 3) {
+            where.removeChild(where.childNodes[i]);
+        }
+
+    }
 }
 
 /*
  Задание 6:
-
+ 
  Выполнить предудыщее задание с использование рекурсии - то есть необходимо заходить внутрь каждого дочернего элемента (углубляться в дерево)
-
+ 
  Так же будьте внимательны при удалении узлов, т.к. можно получить неожиданное поведение при переборе узлов
-
+ 
  Пример:
    После выполнения функции, дерево <span> <div> <b>привет</b> </div> <p>loftchool</p> !!!</span>
    должно быть преобразовано в <span><div><b></b></div><p></p></span>
  */
 function deleteTextNodesRecursive(where) {
-}
+    let array = Array.from(where.childNodes);
 
+    for (let i = 0; i < array.length; i++) {
+        if (array[i].nodeType === 3) {
+            where.removeChild(array[i]);
+        } else if (array[i] !== undefined) {
+
+            deleteTextNodesRecursive(array[i]);
+        }
+    }
+}
 /*
  Задание 7 *:
-
+ 
  Необходимо собрать статистику по всем узлам внутри элемента переданного в параметре root и вернуть ее в виде объекта
  Статистика должна содержать:
  - количество текстовых узлов
@@ -112,7 +147,7 @@ function deleteTextNodesRecursive(where) {
  - количество элементов каждого тега
  Для работы с классами рекомендуется использовать classList
  Постарайтесь не создавать глобальных переменных
-
+ 
  Пример:
    Для дерева <div class="some-class-1"><b>привет!</b> <b class="some-class-1 some-class-2">loftschool</b></div>
    должен быть возвращен такой объект:
@@ -122,24 +157,61 @@ function deleteTextNodesRecursive(where) {
      texts: 3
    }
  */
-function collectDOMStat(root) {
+
+function collectDOMStat(root, obj = { tags: {}, classes: {}, texts: 0 }) {
+    let array = Array.from(root.childNodes);
+
+    for (let i = 0; i < array.length; i++) {
+        if (array[i].nodeType === 3) {
+            (obj.hasOwnProperty('texts') ? obj.texts += 1 : obj.texts = 1);
+        }
+
+        if (array[i].nodeType === 1 && array[i] !== undefined) {
+            let name = array[i].tagName;
+
+            if (obj.hasOwnProperty('tags')) {
+                (obj.tags.hasOwnProperty(name)) ? obj.tags[name] += 1 : obj.tags[name] = 1;
+            } else {
+                obj.tags = { name: 1 };
+            }
+
+            let array2 = Array.from(array[i].classList);
+
+            for (let item = 0; item < array2.length; item++) {
+
+                if (obj.classes.hasOwnProperty(array2[item])) {
+
+                    obj.classes[array2[item]] += 1;
+                } else {
+
+                    obj.classes[array2[item]] = 1;
+                }
+
+            }
+            collectDOMStat(array[i], obj);
+
+        }
+
+    }
+
+    return obj;
 }
 
 /*
  Задание 8 *:
-
+ 
  8.1: Функция должна отслеживать добавление и удаление элементов внутри элемента переданного в параметре where
  Как только в where добавляются или удаляются элементы,
  необходимо сообщать об этом при помощи вызова функции переданной в параметре fn
-
+ 
  8.2: При вызове fn необходимо передавать ей в качестве аргумента объект с двумя свойствами:
    - type: типа события (insert или remove)
    - nodes: массив из удаленных или добавленных элементов (в зависимости от события)
-
+ 
  8.3: Отслеживание должно работать вне зависимости от глубины создаваемых/удаляемых элементов
-
+ 
  Рекомендуется использовать MutationObserver
-
+ 
  Пример:
    Если в where или в одного из его детей добавляется элемент div
    то fn должна быть вызвана с аргументом:
@@ -147,9 +219,9 @@ function collectDOMStat(root) {
      type: 'insert',
      nodes: [div]
    }
-
+ 
    ------
-
+ 
    Если из where или из одного из его детей удаляется элемент div
    то fn должна быть вызвана с аргументом:
    {
@@ -158,6 +230,29 @@ function collectDOMStat(root) {
    }
  */
 function observeChildNodes(where, fn) {
+
+    var observer = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+            if (mutation.addedNodes.length > 0) {
+                let ret = { type: 'insert' };
+
+                ret.nodes = Array.from(mutation.addedNodes);
+                fn(ret);
+            }
+            if (mutation.removedNodes.length > 0) {
+                let ret = { type: 'remove' };
+
+                ret.nodes = Array.from(mutation.removedNodes);
+                fn(ret);
+            }
+        });
+    });
+
+    observer.observe(where, {
+        childList: true,
+        subtree: true
+    });
+
 }
 
 export {
