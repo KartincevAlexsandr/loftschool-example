@@ -27,6 +27,22 @@ const homeworkContainer = document.querySelector('#homework-container');
    homeworkContainer.appendChild(newDiv);
  */
 function createDiv() {
+    var div = document.createElement('div');
+
+    div.setAttribute('class', 'draggable-div');
+    div.style.position = 'fixed';
+
+    var r = Math.floor(Math.random() * (255)),
+        g = Math.floor(Math.random() * (255)),
+        b = Math.floor(Math.random() * (255));
+
+    div.style.backgroundColor = '#' + r.toString(16) + g.toString(16) + b.toString(16);
+    div.style.height = Math.floor(Math.random() * (100)) + 'px';
+    div.style.width = Math.floor(Math.random() * (100)) + 'px';
+    div.style.left = Math.floor(Math.random() * (600)) + 'px';
+    div.style.top = Math.floor(Math.random() * (600)) + 'px';
+
+    return div;
 }
 
 /*
@@ -38,11 +54,30 @@ function createDiv() {
    addListeners(newDiv);
  */
 function addListeners(target) {
+    target.onmousedown = function (e) {
+
+        target.style.position = 'absolute';
+        moveAt(e);
+
+        function moveAt(e) {
+            target.style.left = e.pageX - target.offsetWidth / 2 + 'px';
+            target.style.top = e.pageY - target.offsetHeight / 2 + 'px';
+        }
+
+        homeworkContainer.onmousemove = function (e) {
+            moveAt(e);
+        }
+
+        target.onmouseup = function () {
+            homeworkContainer.onmousemove = null;
+            target.onmouseup = null;
+        }
+    }
 }
 
 let addDivButton = homeworkContainer.querySelector('#addDiv');
 
-addDivButton.addEventListener('click', function() {
+addDivButton.addEventListener('click', function () {
     // создать новый div
     const div = createDiv();
 
