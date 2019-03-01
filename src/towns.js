@@ -120,7 +120,6 @@ filterInput.addEventListener('keyup', function () {
                     let div = document.createElement('div');
 
                     div.innerText = towns[i].name;
-                    //let div = document.createTextNode(towns[i].name);
                     filterResult.appendChild(div);
                 }
             }
