@@ -44,15 +44,13 @@ const addButton = homeworkContainer.querySelector('#add-button');
 const listTable = homeworkContainer.querySelector('#list-table tbody');
 
 filterNameInput.addEventListener('keyup', function () {
-    addTable();
+    genTable(2);
     // здесь можно обработать нажатия на клавиши внутри текстового поля для фильтрации cookie
 });
 
 addButton.addEventListener('click', () => {
     document.cookie = `${addNameInput.value}=${addValueInput.value}`;
-    addNameInput.value = '';
-    addValueInput.value = '';
-    addTable();
+    genTable(1);
     // здесь можно обработать нажатие на кнопку "добавить cookie"
 });
 function isMatching(full, chunk) {
@@ -72,27 +70,47 @@ function parseCoockie() {
         return prev;
     }, {});
 }
-function addTable() {
+
+function genTable(filter) {
     let tables = parseCoockie();
 
     listTable.innerHTML = '';
     for (let key in tables) {
-        if (isMatching(`${key}${tables[key]}`, filterNameInput.value)) {
-            let tr = document.createElement('tr');
+        if (tables.hasOwnProperty(key)) {
 
-            tr.innerHTML = `<td>${key}</td><td>${tables[key]}</td><td>
-            <button class= 'btn-del'value='${key}'>Удалить</td>`;
-            listTable.appendChild(tr);
+            var filtern;
+
+            if (filter == 2) {
+                filtern = `${key} ${tables[key]}`;
+            } else {
+                filtern = `${tables[key]}`;
+            }
+
+            if (isMatching(filtern, filterNameInput.value)) {
+                let tr = document.createElement('tr');
+                let td1 = document.createElement('td');
+                let button = document.createElement('button');
+
+                td1.innerText = key;
+                td1.className = key;
+                tr.appendChild(td1);
+                td1 = document.createElement('td');
+                td1.innerText = tables[key];
+                tr.appendChild(td1);
+                td1 = document.createElement('td');
+                button.value = key;
+                button.addEventListener('click', () => {
+                    var today = new Date(new Date().getTime() - 10000);
+
+                    document.cookie = `${key}=; patch=/; expires= ${today.toUTCString()}`
+                    listTable.removeChild(tr);
+                })
+                td1.appendChild(button);
+                tr.appendChild(td1);
+                listTable.appendChild(tr);
+            }
         }
     }
-    [...document.querySelectorAll('.btn-del')].map(e => {
-        e.addEventListener('click', () => {
-            var today = new Date(new Date().getTime() - 1);
-
-            document.cookie = `${e.value}=; patch=/; expires= ${today.toUTCString()}`
-            addTable();
-        })
-    });
 }
 
-addTable();
+genTable(2);
