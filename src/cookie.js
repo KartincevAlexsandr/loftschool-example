@@ -49,8 +49,10 @@ filterNameInput.addEventListener('keyup', function () {
 });
 
 addButton.addEventListener('click', () => {
-    document.cookie = `${addNameInput.value}=${addValueInput.value}`;
-    genTable(1);
+    if (addNameInput.value !== '' && addValueInput.value !== '') {
+        document.cookie = `${addNameInput.value}=${addValueInput.value}`;
+        genTable(1);
+    }
     // здесь можно обработать нажатие на кнопку "добавить cookie"
 });
 function isMatching(full, chunk) {
